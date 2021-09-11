@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TasksFragment">
+    tools:context="com.josephmolina.joe_to_do.ui.tasks.TasksFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview_tasks"
+        android:id="@+id/task_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
