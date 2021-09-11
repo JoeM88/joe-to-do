@@ -28,6 +28,13 @@ interface TaskDao {
     // Room handled threading.
     // No need for suspend?
     // Flow is Asynchornosuly stream of data
-    @Query("SELECT * FROM task_table")
-    fun getTasks(): Flow<List<Task>>
+    // LIKE -- It doesnt have to be an exact match but the searchquery must be in the string somwhere
+    // || == append
+    // '%' || :searchQuery || '%'  -- tells sqlite to check rows where the searchquery exists anywhere in the name
+    // it can be in the front, middle or end it doesnt matter as long as it is there
+    // Removing the first '%' would mean that the string needs to start with the search query in order to match
+
+    // Important tasks will be at top
+    @Query("SELECT * FROM task_table WHERE name LIKE '%' || :searchQuery || '%' ORDER BY isImportant DESC")
+    fun getTasks(searchQuery: String): Flow<List<Task>>
 }

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--
+    If we didn't have an icon then it would go into the overflow menu
+    showAsAction - with always we tell Android to always show this icon on the app bar
+    with collapseActionView we indicate that the searchview can expand to the width of the app bar
+    but it can also collapse back to its icon
+    -->
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_baseline_search"
+        android:title="Search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="always|collapseActionView" />
+
+    <!--
+    Doesn't have an id because we only care about clicks to the
+    child items and not the parent.
+    -->
+    <item
+        android:icon="@drawable/ic_baseline_sort_24"
+        android:title="Sort"
+        app:showAsAction="always">
+        <!-- This is a submenu -->
+        <menu>
+            <item
+                android:id="@+id/action_sort_by_name"
+                android:title="Sort by name" />
+
+            <item
+                android:id="@+id/action_sort_by_date_created"
+                android:title="Sort by date created" />
+        </menu>
+    </item>
+
+    <!--
+    Setting this menu item's showAsAction to never because we want it
+    to show up in the overflow menu.
+
+    All items that are not visible as action or that has showAsAction to never
+    will appear in overflow menu.
+    -->
+    <item
+        android:id="@+id/action_hide_completed_tasks"
+        android:checkable="true"
+        android:title="Hide completed"
+        app:showAsAction="never">
+    </item>
+
+
+    <item
+        android:id="@+id/action_delete_all_completed_tasks"
+        android:title="Delete all completed tasks"
+        app:showAsAction="never" />
+</menu>
