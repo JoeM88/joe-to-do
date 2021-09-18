@@ -1,15 +1,27 @@
 package com.josephmolina.joe_to_do.ui.tasks
 
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.josephmolina.joe_to_do.data.TaskDao
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 
 class TaskViewModel @ViewModelInject constructor(
         private val taskDao: TaskDao
 ) : ViewModel() {
+
+    init {
+        Log.d("task vm","vm init")
+    }
+
+    val initDate = MutableStateFlow("")
+
+    val sortOrder = MutableStateFlow(SortOrder.BY_DATE)
+    val hideCompleted = MutableStateFlow(false)
+
     /*
     One difference between LiveData and Flow is that LD only ever has the
     latest value of data whereas Flow has the stream of values
@@ -33,11 +45,23 @@ class TaskViewModel @ViewModelInject constructor(
 
     // 2. When the user enters a new character this will trigger the flatmaplatest operator
     // and executes the taskDao.getTasks method passing in the current value of the search query
-    private val tasksFlow = searchQuery.flatMapLatest {
-        taskDao.getTasks(it)
+    private val tasksFlow = combine(
+        searchQuery,
+        sortOrder,
+        hideCompleted
+    ) { query, sortOrder, hideCompleted ->
+        // What do we want to return ?
+        Triple(query, sortOrder, hideCompleted)
+    }.flatMapLatest { (query, sortOrder, hideCompleted) ->
+        taskDao.getTasks(query, sortOrder, hideCompleted)
     }
 
     // 3. After taskDao.getTasks is finished it will update the tasks value with whatever tasks it
     // found to match with the search query
     val tasks = tasksFlow.asLiveData()
+}
+
+enum class SortOrder {
+    BY_NAME,
+    BY_DATE
 }

@@ -1,6 +1,7 @@
 package com.josephmolina.joe_to_do.data
 
 import androidx.room.*
+import com.josephmolina.joe_to_do.ui.tasks.SortOrder
 import kotlinx.coroutines.flow.Flow
 
 @Dao // Triggers code generation for DAO operations
@@ -34,7 +35,18 @@ interface TaskDao {
     // it can be in the front, middle or end it doesnt matter as long as it is there
     // Removing the first '%' would mean that the string needs to start with the search query in order to match
 
+    // 0 means false
     // Important tasks will be at top
-    @Query("SELECT * FROM task_table WHERE name LIKE '%' || :searchQuery || '%' ORDER BY isImportant DESC")
-    fun getTasks(searchQuery: String): Flow<List<Task>>
+
+    fun getTasks(query: String, sortOrder: SortOrder, hideCompleted: Boolean): Flow<List<Task>> =
+        when (sortOrder) {
+            SortOrder.BY_DATE -> getTasksSortedByDateCreated(query, hideCompleted)
+            SortOrder.BY_NAME -> getTasksSortedByName(query, hideCompleted)
+        }
+
+    @Query("SELECT * FROM task_table WHERE (isCompleted != :hideCompleted OR isCompleted = 0) AND name LIKE '%' || :searchQuery || '%' ORDER BY isImportant DESC, name")
+    fun getTasksSortedByName(searchQuery: String, hideCompleted:Boolean ): Flow<List<Task>>
+
+    @Query("SELECT * FROM task_table WHERE (isCompleted != :hideCompleted OR isCompleted = 0) AND name LIKE '%' || :searchQuery || '%' ORDER BY isImportant DESC, created")
+    fun getTasksSortedByDateCreated(searchQuery: String, hideCompleted: Boolean): Flow<List<Task>>
 }

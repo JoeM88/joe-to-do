@@ -31,12 +31,12 @@ abstract class TaskDatabase : RoomDatabase() {
             val dao = database.get().taskDao()
 
             applicationScope.launch {
-                dao.insert(Task("Fake Name"))
-                dao.insert(Task("F ake Name2"))
-                dao.insert(Task("Fake Name3", isImportant = true))
-                dao.insert(Task("Fake Name4", isCompleted = true))
-                dao.insert(Task("Fake Name5"))
-                dao.insert(Task("Fake Name5", isCompleted = true))
+                dao.insert(Task("Finish Android course"))
+                dao.insert(Task("Get groceries"))
+                dao.insert(Task("Watch Candyman movie", isImportant = true))
+                dao.insert(Task("Talk to Elon Musk", isCompleted = true))
+                dao.insert(Task("Eat cupcake"))
+                dao.insert(Task("Run 1 mile", isCompleted = true))
             }
         }
     }
