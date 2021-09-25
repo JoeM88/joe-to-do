@@ -1,7 +1,7 @@
 package com.josephmolina.joe_to_do.data
 
+import android.util.Log
 import androidx.room.*
-import com.josephmolina.joe_to_do.ui.tasks.SortOrder
 import kotlinx.coroutines.flow.Flow
 
 @Dao // Triggers code generation for DAO operations
@@ -40,8 +40,14 @@ interface TaskDao {
 
     fun getTasks(query: String, sortOrder: SortOrder, hideCompleted: Boolean): Flow<List<Task>> =
         when (sortOrder) {
-            SortOrder.BY_DATE -> getTasksSortedByDateCreated(query, hideCompleted)
-            SortOrder.BY_NAME -> getTasksSortedByName(query, hideCompleted)
+            SortOrder.BY_DATE -> {
+                Log.d("tasks vm", "getting tasks by date")
+                getTasksSortedByDateCreated(query, hideCompleted)
+            }
+            SortOrder.BY_NAME -> {
+                Log.d("tasks vm", "getting tasks by name")
+                getTasksSortedByName(query, hideCompleted)
+            }
         }
 
     @Query("SELECT * FROM task_table WHERE (isCompleted != :hideCompleted OR isCompleted = 0) AND name LIKE '%' || :searchQuery || '%' ORDER BY isImportant DESC, name")
